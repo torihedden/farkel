@@ -1,33 +1,62 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
+import { Dice } from './Dice';
+
+export type Die = {
+  id: string;
+  number: number;
+  held: boolean;
+};
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [dice, setDice] = useState<Array<Die>>([]);
+
+  // let score = 0;
+
+  const rollDie: () => number = () =>
+    Math.floor(Math.random() * (6 - 1 + 1) + 1);
+
+  const rollDice = (numberOfDice: number) => {
+    // setDice([]);
+    const currentDice = [
+      { id: 'A', number: 0, held: false },
+      { id: 'B', number: 0, held: false },
+      { id: 'C', number: 0, held: false },
+      { id: 'D', number: 0, held: false },
+      { id: 'E', number: 0, held: false },
+      { id: 'F', number: 0, held: false },
+    ];
+
+    for (let i = 0; i < numberOfDice; i++) {
+      // currentDice.push(rollDie());
+      currentDice[i].number = rollDie();
+    }
+
+    console.log(currentDice);
+    setDice(currentDice);
+    return currentDice;
+  };
+
+  const setHeld = (id: string, val: boolean) => {
+    // dice[index].held = val;
+    // setDice([
+    //   ...dice.slice(0, index),
+    //   { number: dice[index].number, held: val },
+    //   ...dice.slice(index + 1, dice.length),
+    // ]);
+    //
+
+    // find die of given id and change held value to given value
+    setDice(dice.map((die) => (die.id === id ? { ...die, held: val } : die)));
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
       <h1>Farkel</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <Dice dice={dice} test={4000} setHeld={setHeld} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={() => rollDice(6)}>Roll</button>
     </>
   );
 }
