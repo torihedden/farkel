@@ -1,12 +1,20 @@
 .dice-wrapper {
   display: flex;
   justify-content: center;
+  border: solid 1px blue;
+  margin-bottom: 24px;
 }
 
 .die {
-  border: solid 2px #ffffde;
+  background: #ffffde;
+  color: black;
+  font-weight: bold;
   width: 40px;
   margin: 4px;
   padding: 4px;
   text-align: center;
+}
+
+.held {
+  background: gray;
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import { Dice } from './Dice';
+import { scoreRound } from './Scoring';
 
 export type Die = {
   id: string;
@@ -9,15 +10,19 @@ export type Die = {
 };
 
 function App() {
+  const [gameScore, setGameScore] = useState(0);
+  // const [roundScore, setRoundScore] = useState(0);
   const [dice, setDice] = useState<Array<Die>>([]);
+  // const [heldDice, setHeldDice] = useState<Array<number>>([]);
 
-  // let score = 0;
+  const setHeld = (id: string, val: boolean) => {
+    setDice(dice.map((die) => (die.id === id ? { ...die, held: val } : die)));
+  };
 
   const rollDie: () => number = () =>
     Math.floor(Math.random() * (6 - 1 + 1) + 1);
 
   const rollDice = (numberOfDice: number) => {
-    // setDice([]);
     const currentDice = [
       { id: 'A', number: 0, held: false },
       { id: 'B', number: 0, held: false },
@@ -28,37 +33,63 @@ function App() {
     ];
 
     for (let i = 0; i < numberOfDice; i++) {
-      // currentDice.push(rollDie());
       currentDice[i].number = rollDie();
     }
 
-    console.log(currentDice);
+    // console.log(currentDice);
     setDice(currentDice);
     return currentDice;
   };
 
-  const setHeld = (id: string, val: boolean) => {
-    // dice[index].held = val;
-    // setDice([
-    //   ...dice.slice(0, index),
-    //   { number: dice[index].number, held: val },
-    //   ...dice.slice(index + 1, dice.length),
-    // ]);
-    //
-
-    // find die of given id and change held value to given value
-    setDice(dice.map((die) => (die.id === id ? { ...die, held: val } : die)));
-  };
-
   return (
     <>
-      <h1>Farkel</h1>
-      <div className="card">
-        <Dice dice={dice} test={4000} setHeld={setHeld} />
+      <div className="wrapper">
+        <button onClick={() => rollDice(6)}>Roll</button>
       </div>
-      <button onClick={() => rollDice(6)}>Roll</button>
+      <Dice dice={dice} setHeld={setHeld}></Dice>
+      <div className="wrapper">
+        {/* selected score: */}
+        {/* TODO: show score of selecte4d dice */}
+        <br />
+        <div>
+          <button
+            onClick={() => {
+              setGameScore(scoreRound(dice));
+              // setScoredDice([]);
+            }}
+          >
+            Score selected dice
+          </button>
+        </div>
+        <div>total game score: {gameScore}</div>
+      </div>
     </>
   );
+
+  // const [scoredDice, setScoredDice] = useState<Array<Die>>([]);
+
+  // const [score, setScore] = useState(0);
+
+  // // find die of given id and change held value to given value
+  // const setHeld = (id: string, val: boolean) => {
+  //   setDice(dice.map((die) => (die.id === id ? { ...die, held: val } : die)));
+  // };
+
+  // return (
+  //   <>
+  //     <button disabled>Score and roll again</button>
+  //     <button
+  //       onClick={() => {
+  //         setScore(scoreRound(dice));
+  //         setScoredDice([]);
+  //       }}
+  //     >
+  //       Score and end turn
+  //     </button>
+  //     <hr />
+  //     total game score: {score}
+  //   </>
+  // );
 }
 
 export default App;
