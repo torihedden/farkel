@@ -1,0 +1,10 @@
+.die {
+  background: #ffffde;
+  color: black;
+  font-weight: bold;
+  width: 40px;
+  margin: 4px;
+  padding: 4px;
+  text-align: center;
+  cursor: pointer;
+}

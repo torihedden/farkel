@@ -1,95 +1,122 @@
 import { useState } from 'react';
-import './App.css';
-import { Dice } from './Dice';
 import { scoreRound } from './Scoring';
 
-export type Die = {
-  id: string;
-  number: number;
-  held: boolean;
-};
+import './App.css';
+import { Die } from './Die';
+
+const initialDice = [
+  { id: 'A', number: 0 },
+  { id: 'B', number: 0 },
+  { id: 'C', number: 0 },
+  { id: 'D', number: 0 },
+  { id: 'E', number: 0 },
+  { id: 'F', number: 0 },
+];
 
 function App() {
   const [gameScore, setGameScore] = useState(0);
   // const [roundScore, setRoundScore] = useState(0);
-  const [dice, setDice] = useState<Array<Die>>([]);
-  // const [heldDice, setHeldDice] = useState<Array<number>>([]);
 
-  const setHeld = (id: string, val: boolean) => {
-    setDice(dice.map((die) => (die.id === id ? { ...die, held: val } : die)));
+  const [dice, setDice] = useState<Array<Die>>(initialDice);
+  // TODO: add third set, "ACTIVE DICE", instead of just subtracting held dice from all dice
+  // const [activeDice, setActiveDice] = useState<Array<Die>>(initialDice);
+  const [heldDice, setHeldDice] = useState<Array<string>>([]);
+  const [scoredDice, setScoredDice] = useState<Array<string>>([]);
+
+  const isInitialGameRoll =
+    dice.every((d, _, arr) => d.number === arr[0].number) &&
+    dice[0].number === 0;
+
+  /** Takes one dice id and re-rolls the dice's (of that id) value */
+  const rollDie = (id: string) => {
+    const newDieValue = Math.floor(Math.random() * (6 - 1 + 1) + 1);
+
+    setDice((dice) =>
+      dice.map((die) =>
+        die.id === id ? { ...die, number: newDieValue } : die,
+      ),
+    );
   };
 
-  const rollDie: () => number = () =>
-    Math.floor(Math.random() * (6 - 1 + 1) + 1);
-
-  const rollDice = (numberOfDice: number) => {
-    const currentDice = [
-      { id: 'A', number: 0, held: false },
-      { id: 'B', number: 0, held: false },
-      { id: 'C', number: 0, held: false },
-      { id: 'D', number: 0, held: false },
-      { id: 'E', number: 0, held: false },
-      { id: 'F', number: 0, held: false },
-    ];
-
-    for (let i = 0; i < numberOfDice; i++) {
-      currentDice[i].number = rollDie();
+  const rollDice = (ids: Array<string>) => {
+    for (let i = 0; i < ids.length; i++) {
+      rollDie(ids[i]);
     }
 
-    // console.log(currentDice);
-    setDice(currentDice);
-    return currentDice;
+    // setDice(currentDice);
+    // return currentDice;
   };
+
+  const getHeldDice = () => {
+    return heldDice;
+  };
+
+  const addDieToHeldDice = (id: string) => {
+    setHeldDice((dice) => [...dice, id]);
+  };
+
+  const removeDieFromHeldDice = (id: string) => {
+    setHeldDice(heldDice.filter((i) => i !== id));
+  };
+
+  const addDieToScoredDice = (ids: Array<string>) => {
+    // setScoredDice((dice) => [...dice, id]);
+    setScoredDice(ids);
+  };
+
+  const getUnHeldDice = () => {
+    return dice
+      .filter((die) => !heldDice.includes(die.id))
+      .filter((die) => !scoredDice.includes(die.id))
+      .map((die) => die.id);
+  };
+
+  const getDie = (id: string) => dice.find((die) => die.id === id)!;
 
   return (
     <>
       <div className="wrapper">
-        <button onClick={() => rollDice(6)}>Roll</button>
+        <button onClick={() => rollDice(getUnHeldDice())}>Roll</button>
       </div>
-      <Dice dice={dice} setHeld={setHeld}></Dice>
+
+      <div className="dice-wrapper">
+        {!isInitialGameRoll &&
+          getUnHeldDice().map((id) => (
+            <Die die={getDie(id)} onClick={() => addDieToHeldDice(id)} />
+          ))}
+      </div>
+      <br />
+      <hr />
+      <div className="dice-wrapper">
+        {getHeldDice().map((id) => (
+          <Die die={getDie(id)} onClick={() => removeDieFromHeldDice(id)} />
+        ))}
+      </div>
       <div className="wrapper">
-        {/* selected score: */}
-        {/* TODO: show score of selecte4d dice */}
         <br />
         <div>
           <button
             onClick={() => {
               setGameScore(scoreRound(dice));
-              // setScoredDice([]);
+              addDieToScoredDice(heldDice);
+              setHeldDice([]);
             }}
           >
             Score selected dice
           </button>
         </div>
+        <br />
         <div>total game score: {gameScore}</div>
+        <br />
+        <div>scored/ineligible for further rolls dice:</div>
+        <div className="dice-wrapper">
+          {scoredDice.map((id) => (
+            <Die die={getDie(id)} onClick={() => console.log('scored die')} />
+          ))}
+        </div>
       </div>
     </>
   );
-
-  // const [scoredDice, setScoredDice] = useState<Array<Die>>([]);
-
-  // const [score, setScore] = useState(0);
-
-  // // find die of given id and change held value to given value
-  // const setHeld = (id: string, val: boolean) => {
-  //   setDice(dice.map((die) => (die.id === id ? { ...die, held: val } : die)));
-  // };
-
-  // return (
-  //   <>
-  //     <button disabled>Score and roll again</button>
-  //     <button
-  //       onClick={() => {
-  //         setScore(scoreRound(dice));
-  //         setScoredDice([]);
-  //       }}
-  //     >
-  //       Score and end turn
-  //     </button>
-  //     <hr />
-  //     total game score: {score}
-  //   </>
-  // );
 }
 
 export default App;
