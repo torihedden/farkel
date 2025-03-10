@@ -1,4 +1,4 @@
-import { Die } from './App';
+import { Die } from './Die/Die';
 
 const findDuplicates = (dice: Array<Die>, dupeNumber: number) => {
   let counts = 0;

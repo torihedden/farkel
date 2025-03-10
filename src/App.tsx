@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { scoreRound } from './Scoring';
 
 import './App.css';
-import { Die } from './Die';
+import { Die } from './Die/Die';
 
 const initialDice = [
   { id: 'A', number: 0 },
