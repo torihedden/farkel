@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { scoreRound } from './Scoring';
+import { scoreRound } from './Scoring/Scoring';
 
 import './App.css';
 import { Die } from './Die/Die';
