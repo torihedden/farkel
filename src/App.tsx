@@ -14,8 +14,8 @@ const initialDice = [
 ];
 
 function App() {
-  const [gameScore, setGameScore] = useState(0);
   // const [roundScore, setRoundScore] = useState(0);
+  const [gameScore, setGameScore] = useState(0);
 
   const [dice, setDice] = useState<Array<Die>>(initialDice);
   // TODO: add third set, "ACTIVE DICE", instead of just subtracting held dice from all dice
@@ -42,11 +42,9 @@ function App() {
     for (let i = 0; i < ids.length; i++) {
       rollDie(ids[i]);
     }
-
-    // setDice(currentDice);
-    // return currentDice;
   };
 
+  // still needed or elim?
   const getHeldDice = () => {
     return heldDice;
   };
@@ -59,10 +57,8 @@ function App() {
     setHeldDice(heldDice.filter((i) => i !== id));
   };
 
-  const addDieToScoredDice = (ids: Array<string>) => {
-    // setScoredDice((dice) => [...dice, id]);
-    setScoredDice(ids);
-  };
+  const addDieToScoredDice = (ids: Array<string>) =>
+    ids.map((id) => setScoredDice((scoredDice) => [...scoredDice, id]));
 
   const getUnHeldDice = () => {
     return dice
@@ -76,20 +72,33 @@ function App() {
   return (
     <>
       <div className="wrapper">
-        <button onClick={() => rollDice(getUnHeldDice())}>Roll</button>
+        <button
+          onClick={() => rollDice(getUnHeldDice())}
+          disabled={heldDice.length === 6} // TODO: add case where roll yields no scorable dice,
+        >
+          Roll
+        </button>
       </div>
 
       <div className="dice-wrapper">
         {!isInitialGameRoll &&
           getUnHeldDice().map((id) => (
-            <Die die={getDie(id)} onClick={() => addDieToHeldDice(id)} />
+            <Die
+              die={getDie(id)}
+              onClick={() => addDieToHeldDice(id)}
+              key={id}
+            />
           ))}
       </div>
       <br />
       <hr />
       <div className="dice-wrapper">
         {getHeldDice().map((id) => (
-          <Die die={getDie(id)} onClick={() => removeDieFromHeldDice(id)} />
+          <Die
+            die={getDie(id)}
+            onClick={() => removeDieFromHeldDice(id)}
+            key={id}
+          />
         ))}
       </div>
       <div className="wrapper">
@@ -97,7 +106,9 @@ function App() {
         <div>
           <button
             onClick={() => {
-              setGameScore(scoreRound(dice));
+              setGameScore(
+                gameScore + scoreRound(heldDice.map((d) => getDie(d))),
+              );
               addDieToScoredDice(heldDice);
               setHeldDice([]);
             }}
@@ -111,7 +122,7 @@ function App() {
         <div>scored/ineligible for further rolls dice:</div>
         <div className="dice-wrapper">
           {scoredDice.map((id) => (
-            <Die die={getDie(id)} onClick={() => console.log('scored die')} />
+            <Die die={getDie(id)} onClick={() => undefined} key={id} />
           ))}
         </div>
       </div>
