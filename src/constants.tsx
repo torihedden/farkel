@@ -1,4 +1,6 @@
-export const initialDice = [
+import { Die } from './Die/Die';
+
+export const initialDice: Array<Die> = [
   { id: 'A', number: 0 },
   { id: 'B', number: 0 },
   { id: 'C', number: 0 },
