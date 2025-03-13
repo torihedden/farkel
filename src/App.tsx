@@ -2,25 +2,31 @@ import { useState } from 'react';
 import { scoreRound } from './Scoring/Scoring';
 
 import './App.css';
-import { Die } from './Die/Die';
+import { Die, ValidId } from './Die/Die';
 import { initialDice, WINNING_SCORE } from './constants';
+import { Bust } from './Bust';
+import { Footer } from './Footer';
+import { isInitialRoll } from './utils';
 
-function App() {
+const App = () => {
   const [roundScore, setRoundScore] = useState(0);
   const [gameScore, setGameScore] = useState(0);
 
   const [dice, setDice] = useState<Array<Die>>(initialDice);
-  // TODO: add third set, "ACTIVE DICE", instead of just subtracting held dice from all dice
-  // const [activeDice, setActiveDice] = useState<Array<Die>>(initialDice);
-  const [heldDice, setHeldDice] = useState<Array<string>>([]);
-  const [scoredDice, setScoredDice] = useState<Array<string>>([]);
+  const [heldDice, setHeldDice] = useState<Array<ValidId>>([]);
+  const [scoredDice, setScoredDice] = useState<Array<ValidId>>([]);
 
-  const isInitialRoll =
-    dice.every((d, _, arr) => d.number === arr[0].number) &&
-    dice[0].number === 0;
+  const getUnHeldDice = () => {
+    return dice
+      .filter((die) => !heldDice.includes(die.id))
+      .filter((die) => !scoredDice.includes(die.id))
+      .map((die) => die.id);
+  };
+
+  const activeDice = getUnHeldDice();
 
   /** Takes one dice id and re-rolls the dice's (of that id) value */
-  const rollDie = (id: string) => {
+  const rollDie = (id: ValidId) => {
     const newDieValue = Math.floor(Math.random() * (6 - 1 + 1) + 1);
 
     setDice((dice) =>
@@ -30,34 +36,36 @@ function App() {
     );
   };
 
-  const rollDice = (ids: Array<string>) => {
+  // TODO: add handling for special/loaded/ability dice
+
+  const rollDice = (ids: Array<ValidId>) => {
     for (let i = 0; i < ids.length; i++) {
       rollDie(ids[i]);
     }
   };
 
-  const addDieToHeldDice = (id: string) => {
+  const addDieToHeldDice = (id: ValidId) => {
     setHeldDice((dice) => [...dice, id]);
   };
 
-  const removeDieFromHeldDice = (id: string) => {
+  const removeDieFromHeldDice = (id: ValidId) => {
     setHeldDice(heldDice.filter((i) => i !== id));
   };
 
-  const addDieToScoredDice = (ids: Array<string>) =>
+  const addDieToScoredDice = (ids: Array<ValidId>) =>
     ids.map((id) => setScoredDice((scoredDice) => [...scoredDice, id]));
 
-  const getUnHeldDice = () => {
-    return dice
-      .filter((die) => !heldDice.includes(die.id))
-      .filter((die) => !scoredDice.includes(die.id))
-      .map((die) => die.id);
-  };
+  const getDie = (id: ValidId) => dice.find((die) => die.id === id)!;
 
-  const getDie = (id: string) => dice.find((die) => die.id === id)!;
+  const isBust =
+    scoreRound(activeDice.map((d) => getDie(d))) === 0 &&
+    heldDice.length === 0 &&
+    !isInitialRoll(dice);
 
-  const isBust = scoreRound(dice) === 0 && !isInitialRoll;
+  // TODO: add game flow where if at any point you bust,
+  // the round score is set to 0 and your turn is over
 
+  // TODO: consider splitting out active, held, and scored into sep components and move dedicated/salient logic to each one
   return (
     <>
       <div className="wrapper">
@@ -70,10 +78,10 @@ function App() {
           Roll
         </button>
       </div>
-
+      active dice below:
       <div className="dice-wrapper">
-        {!isInitialRoll &&
-          getUnHeldDice().map((id) => (
+        {!isInitialRoll(dice) &&
+          activeDice.map((id) => (
             <Die
               die={getDie(id)}
               onClick={() => (isBust ? () => undefined : addDieToHeldDice(id))}
@@ -81,8 +89,7 @@ function App() {
             />
           ))}
       </div>
-      <br />
-      {isBust && <div>Bust! No viable scoring combinations.</div>}
+      <div className="wrapper">{isBust && <Bust />}</div>
       <hr />
       <div className="dice-wrapper">
         {heldDice.map((id) => (
@@ -102,7 +109,10 @@ function App() {
               addDieToScoredDice(heldDice);
               setHeldDice([]);
             }}
-            disabled={heldDice.length === 0}
+            disabled={
+              heldDice.length === 0 ||
+              scoreRound(heldDice.map((d) => getDie(d))) === 0
+            }
           >
             Score selected dice
           </button>
@@ -117,6 +127,9 @@ function App() {
           ))}
         </div>
         <br />
+
+        {/* TODO: separate out each turn's rolls so it's more clear
+          which set of selected/held die is which */}
         <button
           onClick={() => {
             setGameScore(gameScore + roundScore);
@@ -135,17 +148,10 @@ function App() {
           game score: {gameScore} / {WINNING_SCORE}
         </div>
       </div>
-
-      <div>
-        There are many scoring and play variations of farkel. This version of
-        farkel relies on the scoring rules{' '}
-        <a href="https://kingdom-come-deliverance.fandom.com/wiki/Dice">
-          found here
-        </a>
-        .
-      </div>
+      <br />
+      <Footer />
     </>
   );
-}
+};
 
 export default App;

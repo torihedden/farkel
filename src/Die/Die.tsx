@@ -1,9 +1,9 @@
 import './Die.css';
 
-type ValidIds = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+export type ValidId = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 
 export type Die = {
-  id: ValidIds;
+  id: ValidId;
   number: number;
 };
 
