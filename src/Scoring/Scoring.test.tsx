@@ -117,15 +117,26 @@ describe('round scoring', () => {
     ).toBe(200);
   });
 
-  // TODO: decide if the scoring function should ever be passed
-  // an invalid/non-scoring dice set or not
-  it('should score 0', () => {
+  it('should score 2000 with four 1s', () => {
+    expect(
+      scoreRound([
+        { id: 'A', number: 1 },
+        { id: 'B', number: 1 },
+        { id: 'C', number: 1 },
+        { id: 'D', number: 1 },
+      ]),
+    ).toBe(2000);
+  });
+
+  it('should score 900 with four 4s and one 1', () => {
     expect(
       scoreRound([
         { id: 'A', number: 4 },
-        { id: 'B', number: 6 },
-        { id: 'C', number: 6 },
+        { id: 'B', number: 4 },
+        { id: 'C', number: 4 },
+        { id: 'D', number: 4 },
+        { id: 'E', number: 1 },
       ]),
-    ).toBe(0);
+    ).toBe(900);
   });
 });

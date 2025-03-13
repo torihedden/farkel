@@ -98,6 +98,32 @@ export const scoreRound = (dice: Array<Die>) => {
     return (score += 750);
   }
 
+  /** Score 4-or-more-of-a-kinds */
+  if (findDuplicates(sorted, 1) >= 4) {
+    score += 2000;
+  }
+
+  if (findDuplicates(sorted, 2) >= 4) {
+    score += 400;
+  }
+
+  if (findDuplicates(sorted, 3) >= 4) {
+    score += 600;
+  }
+
+  if (findDuplicates(sorted, 4) >= 4) {
+    score += 800;
+  }
+
+  if (findDuplicates(sorted, 5) >= 4) {
+    score += 1000;
+  }
+
+  if (findDuplicates(sorted, 6) >= 4) {
+    score += 1200;
+  }
+
+  /** Score 3-of-a-kinds */
   if (findDuplicates(sorted, 1) === 3) {
     score += 1000;
   }

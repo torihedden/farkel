@@ -36,11 +36,6 @@ function App() {
     }
   };
 
-  // still needed or elim?
-  const getHeldDice = () => {
-    return heldDice;
-  };
-
   const addDieToHeldDice = (id: string) => {
     setHeldDice((dice) => [...dice, id]);
   };
@@ -61,15 +56,16 @@ function App() {
 
   const getDie = (id: string) => dice.find((die) => die.id === id)!;
 
+  const isBust = scoreRound(dice) === 0 && !isInitialRoll;
+
   return (
     <>
       <div className="wrapper">
         <button
-          onClick={() => rollDice(getUnHeldDice())}
-          disabled={heldDice.length === 6}
-          // TODO: add case where roll yields no scorable dice, the player busts and scores no points
-          // this is more relevant in two-player games but is still a case to consider
-          // since it immediately yields 0 points for that round's score
+          onClick={() => {
+            rollDice(getUnHeldDice());
+          }}
+          disabled={heldDice.length > 0}
         >
           Roll
         </button>
@@ -80,15 +76,16 @@ function App() {
           getUnHeldDice().map((id) => (
             <Die
               die={getDie(id)}
-              onClick={() => addDieToHeldDice(id)}
+              onClick={() => (isBust ? () => undefined : addDieToHeldDice(id))}
               key={id}
             />
           ))}
       </div>
       <br />
+      {isBust && <div>Bust! No viable scoring combinations.</div>}
       <hr />
       <div className="dice-wrapper">
-        {getHeldDice().map((id) => (
+        {heldDice.map((id) => (
           <Die
             die={getDie(id)}
             onClick={() => removeDieFromHeldDice(id)}
@@ -101,9 +98,7 @@ function App() {
         <div>
           <button
             onClick={() => {
-              setRoundScore(
-                gameScore + scoreRound(heldDice.map((d) => getDie(d))),
-              );
+              setRoundScore(scoreRound(heldDice.map((d) => getDie(d))));
               addDieToScoredDice(heldDice);
               setHeldDice([]);
             }}
@@ -139,6 +134,15 @@ function App() {
         <div>
           game score: {gameScore} / {WINNING_SCORE}
         </div>
+      </div>
+
+      <div>
+        There are many scoring and play variations of farkel. This version of
+        farkel relies on the scoring rules{' '}
+        <a href="https://kingdom-come-deliverance.fandom.com/wiki/Dice">
+          found here
+        </a>
+        .
       </div>
     </>
   );

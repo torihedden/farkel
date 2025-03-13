@@ -1,5 +1,7 @@
 import './Die.css';
 
+// type ids = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+
 export type Die = {
   id: string;
   number: number;
