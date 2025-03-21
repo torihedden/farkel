@@ -1,17 +1,15 @@
 import './Die.css';
+import type { Die as D } from './Die';
 
-export type ValidId = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
-
-export type Die = {
-  id: ValidId;
-  number: number;
-};
-
-export const Die = (props: { die: Die; onClick: () => void }) => {
-  const { die, onClick } = props;
+export const Die = (props: {
+  die: D;
+  onClick: () => void;
+  isSelected: boolean;
+}) => {
+  const { die, onClick, isSelected } = props;
 
   return (
-    <div className="die" onClick={onClick}>
+    <div className={`die ${isSelected ? 'selected' : ''}`} onClick={onClick}>
       {die.number}
     </div>
   );

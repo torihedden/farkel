@@ -11,4 +11,10 @@
 .dice-wrapper {
   display: flex;
   justify-content: center;
+  margin-bottom: 80px;
+  padding-top: 24px;
+}
+
+:disabled {
+  cursor: not-allowed;
 }

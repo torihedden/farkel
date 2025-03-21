@@ -1,4 +1,4 @@
-import { Die } from '../Die/Die';
+import type { Die } from '../Die/Die';
 
 const findDuplicates = (dice: Array<Die>, dupeNumber: number) => {
   let counts = 0;
@@ -26,7 +26,7 @@ const sortDice = (dice: Array<Die>) => {
 
 // TODO: using greedy algorithm concept,
 // score all valid scoring combos in a given set of dice
-export const scoreRound = (dice: Array<Die>) => {
+export const scoreDice = (dice: Array<Die>) => {
   const sorted = sortDice(dice);
 
   const sortedScores = sortDice(dice).map((d) => d.number);
