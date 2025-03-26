@@ -12,7 +12,6 @@ import { Footer } from './Footer';
 import './App.css';
 
 const App = () => {
-  const [selectedScore, setSelectedScore] = useState(0);
   // const [roundScore, setRoundScore] = useState(0);
   // const [gameScore, setGameScore] = useState(0);
 
@@ -29,17 +28,16 @@ const App = () => {
     }
   };
 
+  const isDieInScoringCombo = (dice: D[], die: D): boolean => {
+    return scoreDice(dice.filter((d) => d.id !== die.id)) < scoreDice(dice);
+  };
+
+  const selectedScore = scoreDice(selectedDice);
   const noValidScoringCombo: boolean = scoreDice(rollableDice) === 0;
-
-  const hasValidScoreButNotSelectedYet: boolean =
-    scoreDice(rollableDice) !== 0 && selectedDice.length === 0;
-
-  // const hasValidScoreButInvalidDieSelected: boolean =
-  //   scoreDice(selectedDice) === 0 && selectedDice.length > 0;
-
-  // TODO: detect if an extraneous/non-scoring die has been selected
-  // even if there are otherwise valid scoring sets in the selection
-  // and disabled SARA & SAP buttons
+  const hasValidScoringCombo: boolean = selectedScore !== 0;
+  const areSelectedDiceValid: boolean = selectedDice.every((d) =>
+    isDieInScoringCombo(selectedDice, d),
+  );
 
   return (
     <>
@@ -80,9 +78,9 @@ const App = () => {
               onClick={() => {
                 // TODO: make non-selectable when a bust
                 toggleSelectDie(d);
-                setSelectedScore(scoreDice(selectedDice));
               }}
               isSelected={selectedDice.includes(d)}
+              isValid={isDieInScoringCombo(selectedDice, d)}
               key={d.id}
             />
           ))}
@@ -92,12 +90,20 @@ const App = () => {
       {isGameStarted && (
         <div>
           <button
-            disabled={noValidScoringCombo || hasValidScoreButNotSelectedYet}
+            disabled={
+              noValidScoringCombo ||
+              !hasValidScoringCombo ||
+              !areSelectedDiceValid
+            }
           >
             Score and roll again
           </button>
           <button
-            disabled={noValidScoringCombo || hasValidScoreButNotSelectedYet}
+            disabled={
+              noValidScoringCombo ||
+              !hasValidScoringCombo ||
+              !areSelectedDiceValid
+            }
           >
             Score and pass
           </button>
