@@ -24,8 +24,6 @@ const sortDice = (dice: Array<Die>) => {
   return dice;
 };
 
-// TODO: using greedy algorithm concept,
-// score all valid scoring combos in a given set of dice
 export const scoreDice = (dice: Array<Die>) => {
   const sorted = sortDice(dice);
 

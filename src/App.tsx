@@ -10,10 +10,11 @@ import { Footer } from './Footer';
 // import { Scorecard } from './Scorecard/Scorecard';
 
 import './App.css';
+import { Bust } from './Bust.tsx';
 
 const App = () => {
   // const [roundScore, setRoundScore] = useState(0);
-  // const [gameScore, setGameScore] = useState(0);
+  const [gameScore, setGameScore] = useState(0);
 
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
@@ -26,6 +27,16 @@ const App = () => {
     } else {
       setSelectedDice(selectedDice.filter((d) => d.id !== die.id));
     }
+  };
+
+  const removeDice = (dice: D[], diceToRemove: D[]): D[] => {
+    for (let i = 0; i < diceToRemove.length; i++) {
+      dice = dice.filter((die) => die.id !== diceToRemove[i].id);
+    }
+
+    return dice;
+
+    // return dice.filter((die) => !diceToRemove.find((d) => die.id === d.id));
   };
 
   const isDieInScoringCombo = (dice: D[], die: D): boolean => {
@@ -42,7 +53,6 @@ const App = () => {
   return (
     <>
       <h1>Farkel</h1>
-
       {!isGameStarted && (
         <button
           onClick={() => {
@@ -65,11 +75,7 @@ const App = () => {
           Begin game
         </button>
       )}
-
-      {noValidScoringCombo && isGameStarted && (
-        <div>Bust! No valid scoring combinations.</div>
-      )}
-
+      {noValidScoringCombo && isGameStarted && <Bust />}
       {isGameStarted && (
         <div className="dice-wrapper">
           {rollableDice.map((d) => (
@@ -86,7 +92,6 @@ const App = () => {
           ))}
         </div>
       )}
-
       {isGameStarted && (
         <div>
           <button
@@ -95,6 +100,11 @@ const App = () => {
               !hasValidScoringCombo ||
               !areSelectedDiceValid
             }
+            onClick={() => {
+              setGameScore(gameScore + selectedScore);
+              setRollableDice(removeDice(rollableDice, selectedDice));
+              setSelectedDice([]);
+            }}
           >
             Score and roll again
           </button>
@@ -109,11 +119,13 @@ const App = () => {
           </button>
         </div>
       )}
+      {isGameStarted && selectedScore !== 0 && (
+        <div>Selected score: {selectedScore}</div>
+      )}
 
-      <div>Selected score: {isGameStarted && selectedScore}</div>
+      <div>game score: {gameScore}</div>
 
       {/* <Scorecard /> */}
-
       <Footer />
     </>
   );
