@@ -87,7 +87,9 @@ const App = () => {
         </div>
       )}
 
-      {noValidScoringCombo && isGameStarted && <Bust />}
+      {noValidScoringCombo && isGameStarted && rollableDice.length !== 0 && (
+        <Bust />
+      )}
 
       {isGameStarted && (
         <div className="buttons-wrapper">
@@ -99,14 +101,16 @@ const App = () => {
             }
             onClick={() => {
               setGameScore(gameScore + selectedScore);
-              setRollableDice(removeDice(rollableDice, selectedDice));
+
+              setRollableDice((d) => removeDice(d, selectedDice));
+
+              setRollableDice((d) =>
+                d.map((die) => ({ id: die.id, number: rollDie() })),
+              );
+
               setSelectedDice([]);
 
-              // setRollableDice(
-              //   rollableDice.map((die) => ({ id: die.id, number: rollDie() })),
-              // );
-
-              console.log(rollableDice);
+              // console.log(rollableDice);
             }}
           >
             Score and roll again
