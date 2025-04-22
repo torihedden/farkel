@@ -20,12 +20,17 @@ export const Die = (props: {
   die: D;
   onClick: () => void;
   isSelected: boolean;
+  isSelectable: boolean;
 }) => {
-  const { die, onClick, isSelected } = props;
+  const { die, onClick, isSelected, isSelectable } = props;
+
+  const dieClasses =
+    `die ${isSelected ? 'selected' : ''}` +
+    `${isSelectable ? '' : 'not-selectable'}`;
 
   return (
     <div>
-      <div className={`die ${isSelected ? 'selected' : ''}`} onClick={onClick}>
+      <div className={dieClasses} onClick={onClick}>
         <img src={DICE_PIPS[die.number]} />
       </div>
       <div>{die.id}</div>

@@ -13,7 +13,7 @@ import './App.css';
 import { Bust } from './Bust.tsx';
 
 const App = () => {
-  // const [roundScore, setRoundScore] = useState(0);
+  const [roundScore, setRoundScore] = useState(0);
   const [gameScore, setGameScore] = useState(0);
   const [totalTurns, setTotalTurns] = useState(0);
 
@@ -58,6 +58,8 @@ const App = () => {
   const areSelectedDiceValid: boolean = selectedDice.every((d) =>
     isDieInScoringCombo(selectedDice, d),
   );
+  const isBust =
+    noValidScoringCombo && isGameStarted && rollableDice.length !== 0;
 
   return (
     <>
@@ -90,20 +92,16 @@ const App = () => {
           {rollableDice.map((d) => (
             <Die
               die={d}
-              onClick={() => {
-                // TODO: make non-selectable when a bust
-                toggleSelectDie(d);
-              }}
+              onClick={isBust ? () => {} : () => toggleSelectDie(d)}
               isSelected={selectedDice.includes(d)}
+              isSelectable={!isBust}
               key={d.id}
             />
           ))}
         </div>
       )}
 
-      {noValidScoringCombo && isGameStarted && rollableDice.length !== 0 && (
-        <Bust />
-      )}
+      {isBust && <Bust />}
 
       {isGameStarted && (
         <div className="buttons-wrapper">
@@ -114,7 +112,7 @@ const App = () => {
               !areSelectedDiceValid
             }
             onClick={() => {
-              setGameScore(gameScore + selectedScore);
+              setRoundScore(roundScore + selectedScore);
 
               setRollableDice((d) => removeDice(d, selectedDice));
 
@@ -123,8 +121,6 @@ const App = () => {
               );
 
               setSelectedDice([]);
-
-              // console.log(rollableDice);
             }}
           >
             Score and roll again
@@ -135,7 +131,10 @@ const App = () => {
               !hasValidScoringCombo ||
               !areSelectedDiceValid
             }
-            onClick={() => setTotalTurns(totalTurns + 1)}
+            onClick={() => {
+              setTotalTurns(totalTurns + 1);
+              setGameScore(gameScore + roundScore);
+            }}
           >
             Score and pass
           </button>
@@ -147,7 +146,7 @@ const App = () => {
       {isGameStarted && (
         <Scorecard
           gameScore={gameScore}
-          scoreRound={999}
+          roundScore={roundScore}
           selectedScore={selectedScore}
           totalTurns={totalTurns}
         />

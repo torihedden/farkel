@@ -9,6 +9,10 @@
   cursor: pointer;
 }
 
+.not-selectable {
+  cursor: not-allowed;
+}
+
 .selected {
   background: var(--gray);
 }
