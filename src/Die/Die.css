@@ -1,14 +1,18 @@
 .die {
-  background: #ffffde;
-  color: black;
+  background: var(--background);
+  color: var(--dark);
   font-weight: bold;
-  width: 40px;
-  margin: 4px;
-  padding: 4px;
+  width: var(--medium);
+  margin: var(--x-small);
+  padding: var(--x-small);
   text-align: center;
   cursor: pointer;
 }
 
 .selected {
-  background: gray;
+  background: var(--gray);
+}
+
+.die:hover {
+  filter: brightness(50%);
 }

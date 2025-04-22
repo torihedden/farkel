@@ -1,3 +1,5 @@
 .scorecard {
-  border: solid 1px gray;
+  border: solid 1px var(--gray);
+  margin-top: var(--medium);
+  padding: var(--x-small);
 }

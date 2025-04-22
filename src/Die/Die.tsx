@@ -11,8 +11,7 @@ export const Die = (props: {
 
   return (
     <div className={`die ${isSelected ? 'selected' : ''}`} onClick={onClick}>
-      {die.number}
-      {isValid.toString()}
+      {die.number} | {isValid.toString()}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import type { Die as D } from './Die/Die.ts';
 
 import { Die } from './Die/Die.tsx';
 import { Footer } from './Footer';
-// import { Scorecard } from './Scorecard/Scorecard';
+import { Scorecard } from './Scorecard/Scorecard';
 
 import './App.css';
 import { Bust } from './Bust.tsx';
@@ -15,6 +15,7 @@ import { Bust } from './Bust.tsx';
 const App = () => {
   // const [roundScore, setRoundScore] = useState(0);
   const [gameScore, setGameScore] = useState(0);
+  const [totalTurns, setTotalTurns] = useState(0);
 
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
@@ -75,7 +76,7 @@ const App = () => {
           Begin game
         </button>
       )}
-      {noValidScoringCombo && isGameStarted && <Bust />}
+
       {isGameStarted && (
         <div className="dice-wrapper">
           {rollableDice.map((d) => (
@@ -92,8 +93,11 @@ const App = () => {
           ))}
         </div>
       )}
+
+      {noValidScoringCombo && isGameStarted && <Bust />}
+
       {isGameStarted && (
-        <div>
+        <div className="buttons-wrapper">
           <button
             disabled={
               noValidScoringCombo ||
@@ -114,18 +118,30 @@ const App = () => {
               !hasValidScoringCombo ||
               !areSelectedDiceValid
             }
+            onClick={() => setTotalTurns(totalTurns + 1)}
           >
             Score and pass
           </button>
+
+          <button>Pass turn</button>
         </div>
       )}
-      {isGameStarted && selectedScore !== 0 && (
+
+      {/* {isGameStarted && selectedScore !== 0 && (
         <div>Selected score: {selectedScore}</div>
+      )} */}
+
+      {/* {isGameStarted && <div>game score: {gameScore}</div>} */}
+
+      {isGameStarted && (
+        <Scorecard
+          gameScore={gameScore}
+          scoreRound={999}
+          selectedScore={selectedScore}
+          totalTurns={totalTurns}
+        />
       )}
 
-      <div>game score: {gameScore}</div>
-
-      {/* <Scorecard /> */}
       <Footer />
     </>
   );

@@ -5,16 +5,24 @@
 }
 
 .wrapper {
-  margin-bottom: 40px;
+  margin-bottom: var(--medium);
+}
+
+.buttons-wrapper {
+  margin-top: var(--large);
 }
 
 .dice-wrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 80px;
-  padding-top: 24px;
+  margin-bottom: var(--medium);
+  padding-top: var(--medium);
 }
 
 :disabled {
   cursor: not-allowed;
+}
+
+button {
+  margin-left: var(--small);
 }
