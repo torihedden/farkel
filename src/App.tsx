@@ -30,16 +30,30 @@ const App = () => {
     }
   };
 
+  const flattenDiceToNumbers = (dice: Array<D>): number[] => {
+    const nums: number[] = [];
+
+    dice.map((d) => {
+      nums.push(d.number);
+    });
+
+    return nums;
+  };
+
   const removeDice = (dice: D[], diceToRemove: D[]): D[] => {
     return dice.filter((die) => !diceToRemove.find((d) => die.id === d.id));
   };
 
   const isDieInScoringCombo = (dice: D[], die: D): boolean => {
-    return scoreDice(dice.filter((d) => d.id !== die.id)) < scoreDice(dice);
+    return (
+      scoreDice(flattenDiceToNumbers(dice.filter((d) => d.id !== die.id))) <
+      scoreDice(flattenDiceToNumbers(dice))
+    );
   };
 
-  const selectedScore = scoreDice(selectedDice);
-  const noValidScoringCombo: boolean = scoreDice(rollableDice) === 0;
+  const selectedScore = scoreDice(flattenDiceToNumbers(selectedDice));
+  const noValidScoringCombo: boolean =
+    scoreDice(flattenDiceToNumbers(rollableDice)) === 0;
   const hasValidScoringCombo: boolean = selectedScore !== 0;
   const areSelectedDiceValid: boolean = selectedDice.every((d) =>
     isDieInScoringCombo(selectedDice, d),
