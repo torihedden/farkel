@@ -12,143 +12,136 @@ const findDuplicates = (dice: Array<Die>, dupeNumber: number) => {
   return counts;
 };
 
-const sortDice = (dice: Array<Die>) => {
-  dice.sort((a, b) => {
-    if (a.number < b.number) {
-      return -1;
-    } else if (a.number > b.number) {
-      return 1;
-    } else return 0;
-  });
+const diceNumbers = (dice: Array<Die>): number[] => {
+  const nums: number[] = []
+  
+  dice.map((d) => {nums.push(d.number)})
 
-  return dice;
-};
+  return nums
+}
 
 export const scoreDice = (dice: Array<Die>) => {
-  const sorted = sortDice(dice);
-
-  const sortedScores = sortDice(dice).map((d) => d.number);
-
+  const numbers = diceNumbers(dice)
   let score = 0;
 
   if (
-    sortedScores.includes(1) &&
-    sortedScores.includes(2) &&
-    sortedScores.includes(3) &&
-    sortedScores.includes(4) &&
-    sortedScores.includes(5) &&
-    sortedScores.includes(6)
+    numbers.includes(1) &&
+    numbers.includes(2) &&
+    numbers.includes(3) &&
+    numbers.includes(4) &&
+    numbers.includes(5) &&
+    numbers.includes(6)
   ) {
     return (score += 1500);
   }
 
   if (
-    sortedScores.includes(1) &&
-    sortedScores.includes(2) &&
-    sortedScores.includes(3) &&
-    sortedScores.includes(4) &&
-    sortedScores.includes(5) &&
-    findDuplicates(sorted, 1) === 2
+    numbers.includes(1) &&
+    numbers.includes(2) &&
+    numbers.includes(3) &&
+    numbers.includes(4) &&
+    numbers.includes(5) &&
+    findDuplicates(dice, 1) === 2
   ) {
     return (score += 600);
   }
 
   if (
-    sortedScores.includes(1) &&
-    sortedScores.includes(2) &&
-    sortedScores.includes(3) &&
-    sortedScores.includes(4) &&
-    sortedScores.includes(5) &&
-    findDuplicates(sorted, 5) === 2
+    numbers.includes(1) &&
+    numbers.includes(2) &&
+    numbers.includes(3) &&
+    numbers.includes(4) &&
+    numbers.includes(5) &&
+    findDuplicates(dice, 5) === 2
   ) {
     return (score += 550);
   }
 
   if (
-    sortedScores.includes(1) &&
-    sortedScores.includes(2) &&
-    sortedScores.includes(3) &&
-    sortedScores.includes(4) &&
-    sortedScores.includes(5)
+    numbers.includes(1) &&
+    numbers.includes(2) &&
+    numbers.includes(3) &&
+    numbers.includes(4) &&
+    numbers.includes(5)
   ) {
     return (score += 500);
   }
 
   if (
-    sortedScores.includes(2) &&
-    sortedScores.includes(3) &&
-    sortedScores.includes(4) &&
-    sortedScores.includes(5) &&
-    sortedScores.includes(6) &&
-    findDuplicates(sorted, 5) === 2
+    numbers.includes(2) &&
+    numbers.includes(3) &&
+    numbers.includes(4) &&
+    numbers.includes(5) &&
+    numbers.includes(6) &&
+    findDuplicates(dice, 5) === 2
   ) {
     return (score += 800);
   }
 
   if (
-    sortedScores.includes(2) &&
-    sortedScores.includes(3) &&
-    sortedScores.includes(4) &&
-    sortedScores.includes(5) &&
-    sortedScores.includes(6) &&
-    findDuplicates(sorted, 5) !== 2
+    numbers.includes(2) &&
+    numbers.includes(3) &&
+    numbers.includes(4) &&
+    numbers.includes(5) &&
+    numbers.includes(6) &&
+    findDuplicates(dice, 5) !== 2
   ) {
     return (score += 750);
   }
 
   /** Score 4-or-more-of-a-kinds */
-  if (findDuplicates(sorted, 1) >= 4) {
+  if (findDuplicates(dice, 1) >= 4) {
     score += 2000;
   }
 
-  if (findDuplicates(sorted, 2) >= 4) {
+  if (findDuplicates(dice, 2) >= 4) {
     score += 400;
   }
 
-  if (findDuplicates(sorted, 3) >= 4) {
+  if (findDuplicates(dice, 3) >= 4) {
     score += 600;
   }
 
-  if (findDuplicates(sorted, 4) >= 4) {
+  if (findDuplicates(dice, 4) >= 4) {
     score += 800;
   }
 
-  if (findDuplicates(sorted, 5) >= 4) {
+  if (findDuplicates(dice, 5) >= 4) {
     score += 1000;
   }
 
-  if (findDuplicates(sorted, 6) >= 4) {
+  if (findDuplicates(dice, 6) >= 4) {
     score += 1200;
   }
 
   /** Score 3-of-a-kinds */
-  if (findDuplicates(sorted, 1) === 3) {
+  if (findDuplicates(dice, 1) === 3) {
     score += 1000;
   }
 
-  if (findDuplicates(sorted, 2) === 3) {
+  if (findDuplicates(dice, 2) === 3) {
     score += 200;
   }
 
-  if (findDuplicates(sorted, 3) === 3) {
+  if (findDuplicates(dice, 3) === 3) {
     score += 300;
   }
 
-  if (findDuplicates(sorted, 4) === 3) {
+  if (findDuplicates(dice, 4) === 3) {
     score += 400;
   }
 
-  if (findDuplicates(sorted, 5) === 3) {
+  if (findDuplicates(dice, 5) === 3) {
     score += 500;
   }
 
-  if (findDuplicates(sorted, 6) === 3) {
+  if (findDuplicates(dice, 6) === 3) {
     score += 600;
   }
 
-  sorted.map((die) => {
-    if (die.number === 1 && findDuplicates(sorted, 1) < 3) score += 100;
-    if (die.number === 5 && findDuplicates(sorted, 5) < 3) score += 50;
+  dice.map((die: Die) => {
+    if (die.number === 1 && findDuplicates(dice, 1) < 3) score += 100;
+    if (die.number === 5 && findDuplicates(dice, 5) < 3) score += 50;
   });
 
   return score;

@@ -31,13 +31,7 @@ const App = () => {
   };
 
   const removeDice = (dice: D[], diceToRemove: D[]): D[] => {
-    for (let i = 0; i < diceToRemove.length; i++) {
-      dice = dice.filter((die) => die.id !== diceToRemove[i].id);
-    }
-
-    return dice;
-
-    // return dice.filter((die) => !diceToRemove.find((d) => die.id === d.id));
+    return dice.filter((die) => !diceToRemove.find((d) => die.id === d.id));
   };
 
   const isDieInScoringCombo = (dice: D[], die: D): boolean => {
@@ -87,7 +81,6 @@ const App = () => {
                 toggleSelectDie(d);
               }}
               isSelected={selectedDice.includes(d)}
-              isValid={isDieInScoringCombo(selectedDice, d)}
               key={d.id}
             />
           ))}
@@ -108,6 +101,12 @@ const App = () => {
               setGameScore(gameScore + selectedScore);
               setRollableDice(removeDice(rollableDice, selectedDice));
               setSelectedDice([]);
+
+              // setRollableDice(
+              //   rollableDice.map((die) => ({ id: die.id, number: rollDie() })),
+              // );
+
+              console.log(rollableDice);
             }}
           >
             Score and roll again
@@ -123,15 +122,9 @@ const App = () => {
             Score and pass
           </button>
 
-          <button>Pass turn</button>
+          <button disabled>Pass turn</button>
         </div>
       )}
-
-      {/* {isGameStarted && selectedScore !== 0 && (
-        <div>Selected score: {selectedScore}</div>
-      )} */}
-
-      {/* {isGameStarted && <div>game score: {gameScore}</div>} */}
 
       {isGameStarted && (
         <Scorecard
