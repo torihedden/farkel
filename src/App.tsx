@@ -112,6 +112,8 @@ const App = () => {
               !areSelectedDiceValid
             }
             onClick={() => {
+              // TODO: if score validly all 6 dice, get 6 new dice and continue rolling/scoring
+
               setRoundScore(roundScore + selectedScore);
 
               setRollableDice((d) => removeDice(d, selectedDice));
@@ -125,6 +127,7 @@ const App = () => {
           >
             Score and roll again
           </button>
+
           <button
             disabled={
               noValidScoringCombo ||
@@ -134,12 +137,20 @@ const App = () => {
             onClick={() => {
               setTotalTurns(totalTurns + 1);
               setGameScore(gameScore + roundScore);
+
+              // setRollableDice(initialDice);
+
+              // setRollableDice(
+              //   rollableDice.map((die) => ({ id: die.id, number: rollDie() })),
+              // );
             }}
           >
             Score and pass
           </button>
 
-          <button disabled>Pass turn</button>
+          <button disabled={!isBust} onClick={() => {}}>
+            Pass turn
+          </button>
         </div>
       )}
 

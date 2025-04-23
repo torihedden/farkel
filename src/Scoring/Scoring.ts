@@ -79,28 +79,78 @@ export const scoreDice = (dice: number[]) => {
     return (score += 750);
   }
 
-  /** Score 4-or-more-of-a-kinds */
-  if (findDuplicates(dice, 1) >= 4) {
-    score += 2000;
+  /** Score 6-of-a-kinds */
+  if (findDuplicates(dice, 1) === 6) {
+    return score += 8000;
   }
 
-  if (findDuplicates(dice, 2) >= 4) {
-    score += 400;
+  if (findDuplicates(dice, 2) === 6) {
+    return score += 1600;
   }
 
-  if (findDuplicates(dice, 3) >= 4) {
-    score += 600;
+  if (findDuplicates(dice, 3) === 6) {
+    return score += 2400;
   }
 
-  if (findDuplicates(dice, 4) >= 4) {
+  if (findDuplicates(dice, 4) === 6) {
+    return score += 3200;
+  }
+
+  if (findDuplicates(dice, 5) === 6) {
+    return score += 4000;
+  }
+
+  if (findDuplicates(dice, 6) === 6) {
+    return score += 4800;
+  }
+
+  /** Score 5-of-a-kinds */
+  if (findDuplicates(dice, 1) === 5) {
+    score += 4000;
+  }
+
+  if (findDuplicates(dice, 2) === 5) {
     score += 800;
   }
 
-  if (findDuplicates(dice, 5) >= 4) {
+  if (findDuplicates(dice, 3) === 5) {
+    score += 1200;
+  }
+
+  if (findDuplicates(dice, 4) === 5) {
+    score += 1600;
+  }
+
+  if (findDuplicates(dice, 5) === 5) {
+    score += 2000;
+  }
+
+  if (findDuplicates(dice, 6) === 5) {
+    score += 2400;
+  }
+
+  /** Score 4-of-a-kinds */
+  if (findDuplicates(dice, 1) === 4) {
+    score += 2000;
+  }
+
+  if (findDuplicates(dice, 2) === 4) {
+    score += 400;
+  }
+
+  if (findDuplicates(dice, 3) === 4) {
+    score += 600;
+  }
+
+  if (findDuplicates(dice, 4) === 4) {
+    score += 800;
+  }
+
+  if (findDuplicates(dice, 5) === 4) {
     score += 1000;
   }
 
-  if (findDuplicates(dice, 6) >= 4) {
+  if (findDuplicates(dice, 6) === 4) {
     score += 1200;
   }
 
