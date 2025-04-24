@@ -98,9 +98,11 @@ const App = () => {
           {rollableDice.map((d) => (
             <Die
               die={d}
-              onClick={isBust ? () => {} : () => toggleSelectDie(d)}
+              onClick={
+                isBust || isGameWon ? () => {} : () => toggleSelectDie(d)
+              }
               isSelected={selectedDice.includes(d)}
-              isSelectable={!isBust}
+              isDisabled={isGameWon || isBust}
               key={`${d.id}-${rollableDice.length}`}
             />
           ))}
@@ -177,6 +179,7 @@ const App = () => {
           <button
             disabled={!isBust}
             onClick={() => {
+              setTotalTurns(totalTurns + 1);
               setRoundScore(0);
               setSelectedDice([]);
               createNewFullDiceSet();
@@ -197,10 +200,18 @@ const App = () => {
       )}
 
       {isGameStarted && (
-        <div>
+        <div className="debugging-buttons">
           <br />
-          <button onClick={() => createNewFullDiceSet()}>
-            Reset dice for debug/test
+          <button onClick={() => createNewFullDiceSet()}>Reset dice</button>
+          <button
+            onClick={() => {
+              setSelectedDice([]);
+              setRoundScore(0);
+              setGameScore(0);
+              setTotalTurns(0);
+            }}
+          >
+            Reset all scores
           </button>
         </div>
       )}

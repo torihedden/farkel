@@ -26,3 +26,12 @@
 .buttons-wrapper button {
   margin-right: var(--small);
 }
+
+.debugging-buttons {
+  margin-top: var(--medium);
+  font-family: monospace;
+}
+
+.debugging-buttons button:nth-of-type(1) {
+  margin-right: var(--small);
+}

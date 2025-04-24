@@ -20,13 +20,13 @@ export const Die = (props: {
   die: D;
   onClick: () => void;
   isSelected: boolean;
-  isSelectable: boolean;
+  isDisabled: boolean;
 }) => {
-  const { die, onClick, isSelected, isSelectable } = props;
+  const { die, onClick, isSelected, isDisabled } = props;
 
   const dieClasses =
     `die ${isSelected ? 'selected' : ''}` +
-    `${isSelectable ? '' : 'not-selectable'}`;
+    `${isDisabled ? 'not-selectable' : ''}`;
 
   return (
     <div>
