@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { initialDice } from './constants';
+import { initialDice, WINNING_SCORE } from './constants';
 import { rollDie } from './utils.ts';
 import { scoreDice } from './Scoring/Scoring.ts';
 import type { Die as D } from './Die/Die.ts';
@@ -21,6 +21,8 @@ const App = () => {
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
 
   const [isGameStarted, setIsGameStarted] = useState(false);
+
+  const isGameWon = gameScore >= WINNING_SCORE;
 
   const toggleSelectDie = (die: D) => {
     if (!selectedDice.includes(die)) {
@@ -51,15 +53,20 @@ const App = () => {
     );
   };
 
-  const selectedScore = scoreDice(flattenDiceToNumbers(selectedDice));
+  const selectedScore: number = scoreDice(flattenDiceToNumbers(selectedDice));
   const noValidScoringCombo: boolean =
     scoreDice(flattenDiceToNumbers(rollableDice)) === 0;
   const hasValidScoringCombo: boolean = selectedScore !== 0;
   const areSelectedDiceValid: boolean = selectedDice.every((d) =>
     isDieInScoringCombo(selectedDice, d),
   );
-  const isBust =
+  const isBust: boolean =
     noValidScoringCombo && isGameStarted && rollableDice.length !== 0;
+
+  const createNewFullDiceSet = () =>
+    setRollableDice(
+      initialDice.map((die) => ({ id: die.id, number: rollDie() })),
+    );
 
   return (
     <>
@@ -70,17 +77,16 @@ const App = () => {
             setIsGameStarted(true);
             setRollableDice(
               rollableDice.map((die) => ({ id: die.id, number: rollDie() })),
-
-              // Test roll for debugging
-              // [
-              //   { id: 'A', number: 2 },
-              //   { id: 'B', number: 2 },
-              //   { id: 'C', number: 3 },
-              //   { id: 'D', number: 3 },
-              //   { id: 'E', number: 4 },
-              //   { id: 'F', number: 4 },
-              // ],
             );
+            // Test roll for debugging
+            // [
+            //   { id: 'A', number: 2 },
+            //   { id: 'B', number: 2 },
+            //   { id: 'C', number: 3 },
+            //   { id: 'D', number: 3 },
+            //   { id: 'E', number: 4 },
+            //   { id: 'F', number: 4 },
+            // ],
           }}
         >
           Begin game
@@ -95,13 +101,30 @@ const App = () => {
               onClick={isBust ? () => {} : () => toggleSelectDie(d)}
               isSelected={selectedDice.includes(d)}
               isSelectable={!isBust}
-              key={d.id}
+              key={`${d.id}-${rollableDice.length}`}
             />
           ))}
         </div>
       )}
 
       {isBust && <Bust />}
+
+      {isGameWon && (
+        <div>
+          <p>Congrats, you won!</p>
+          <div>
+            <button
+              onClick={() => {
+                setRoundScore(0);
+                setGameScore(0);
+                createNewFullDiceSet();
+              }}
+            >
+              Start new game
+            </button>
+          </div>
+        </div>
+      )}
 
       {isGameStarted && (
         <div className="buttons-wrapper">
@@ -113,6 +136,10 @@ const App = () => {
             }
             onClick={() => {
               // TODO: if score validly all 6 dice, get 6 new dice and continue rolling/scoring
+
+              // TODO: if bust, set round score to 0
+
+              // if (isBust) setRoundScore(0)
 
               setRoundScore(roundScore + selectedScore);
 
@@ -136,19 +163,25 @@ const App = () => {
             }
             onClick={() => {
               setTotalTurns(totalTurns + 1);
-              setGameScore(gameScore + roundScore);
+              setGameScore(gameScore + roundScore + selectedScore);
 
-              // setRollableDice(initialDice);
+              setSelectedDice([]);
+              setRoundScore(0);
 
-              // setRollableDice(
-              //   rollableDice.map((die) => ({ id: die.id, number: rollDie() })),
-              // );
+              createNewFullDiceSet();
             }}
           >
             Score and pass
           </button>
 
-          <button disabled={!isBust} onClick={() => {}}>
+          <button
+            disabled={!isBust}
+            onClick={() => {
+              setRoundScore(0);
+              setSelectedDice([]);
+              createNewFullDiceSet();
+            }}
+          >
             Pass turn
           </button>
         </div>
@@ -161,6 +194,15 @@ const App = () => {
           selectedScore={selectedScore}
           totalTurns={totalTurns}
         />
+      )}
+
+      {isGameStarted && (
+        <div>
+          <br />
+          <button onClick={() => createNewFullDiceSet()}>
+            Reset dice for debug/test
+          </button>
+        </div>
       )}
 
       <Footer />

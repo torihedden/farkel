@@ -9,4 +9,4 @@ export const initialDice: Array<Die> = [
   { id: 'F', number: 1 },
 ];
 
-export const WINNING_SCORE = 4000;
+export const WINNING_SCORE = 1000;
