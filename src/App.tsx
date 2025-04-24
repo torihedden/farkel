@@ -16,6 +16,7 @@ const App = () => {
   const [roundScore, setRoundScore] = useState(0);
   const [gameScore, setGameScore] = useState(0);
   const [totalTurns, setTotalTurns] = useState(0);
+  const [bestScore, setBestScore] = useState(getBestScore() || '0');
 
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
@@ -63,34 +64,32 @@ const App = () => {
   const isBust: boolean =
     noValidScoringCombo && isGameStarted && rollableDice.length !== 0;
 
-  const createNewFullDiceSet = () =>
+  const createNewFullDiceSet = () => {
     setRollableDice(
       initialDice.map((die) => ({ id: die.id, number: rollDie() })),
     );
+  };
+
+  function getBestScore() {
+    return localStorage.getItem('bestScore');
+  }
 
   return (
     <>
-      <h1>Farkel</h1>
       {!isGameStarted && (
-        <button
-          onClick={() => {
-            setIsGameStarted(true);
-            setRollableDice(
-              rollableDice.map((die) => ({ id: die.id, number: rollDie() })),
-            );
-            // Test roll for debugging
-            // [
-            //   { id: 'A', number: 2 },
-            //   { id: 'B', number: 2 },
-            //   { id: 'C', number: 3 },
-            //   { id: 'D', number: 3 },
-            //   { id: 'E', number: 4 },
-            //   { id: 'F', number: 4 },
-            // ],
-          }}
-        >
-          Begin game
-        </button>
+        <>
+          <h1>Farkel</h1>
+          <button
+            onClick={() => {
+              setIsGameStarted(true);
+              setRollableDice(
+                rollableDice.map((die) => ({ id: die.id, number: rollDie() })),
+              );
+            }}
+          >
+            Begin game
+          </button>
+        </>
       )}
 
       {isGameStarted && (
@@ -103,7 +102,7 @@ const App = () => {
               }
               isSelected={selectedDice.includes(d)}
               isDisabled={isGameWon || isBust}
-              key={`${d.id}-${rollableDice.length}`}
+              key={`${d.id}-${rollableDice.length}-${totalTurns}`}
             />
           ))}
         </div>
@@ -137,12 +136,6 @@ const App = () => {
               !areSelectedDiceValid
             }
             onClick={() => {
-              // TODO: if score validly all 6 dice, get 6 new dice and continue rolling/scoring
-
-              // TODO: if bust, set round score to 0
-
-              // if (isBust) setRoundScore(0)
-
               setRoundScore(roundScore + selectedScore);
 
               setRollableDice((d) => removeDice(d, selectedDice));
@@ -156,6 +149,8 @@ const App = () => {
           >
             Score and roll again
           </button>
+
+          {rollableDice.length === 0 && <>{createNewFullDiceSet()}</>}
 
           <button
             disabled={
@@ -171,6 +166,12 @@ const App = () => {
               setRoundScore(0);
 
               createNewFullDiceSet();
+
+              // TODO: update best of all time score on game win
+              if (isGameWon) {
+                setBestScore(gameScore.toString());
+                localStorage.setItem('bestScore', gameScore.toString());
+              }
             }}
           >
             Score and pass
@@ -193,9 +194,10 @@ const App = () => {
       {isGameStarted && (
         <Scorecard
           gameScore={gameScore}
-          roundScore={roundScore}
+          roundScore={isBust ? 0 : roundScore}
           selectedScore={selectedScore}
           totalTurns={totalTurns}
+          bestScore={bestScore}
         />
       )}
 
