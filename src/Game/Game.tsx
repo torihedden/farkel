@@ -12,7 +12,6 @@ export const Game = () => {
   const [roundScore, setRoundScore] = useState(0);
   const [gameScore, setGameScore] = useState(0);
   const [totalTurns, setTotalTurns] = useState(0);
-  const [bestScore, setBestScore] = useState(getBestScore() || '0');
 
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
@@ -62,10 +61,6 @@ export const Game = () => {
       initialDice.map((die) => ({ id: die.id, number: rollDie() })),
     );
   };
-
-  function getBestScore() {
-    return localStorage.getItem('bestScore');
-  }
 
   useEffect(() => {
     setRollableDice(
@@ -148,12 +143,6 @@ export const Game = () => {
             setRoundScore(0);
 
             createNewFullDiceSet();
-
-            // TODO: update best of all time score on game win
-            if (isGameWon) {
-              setBestScore(gameScore.toString());
-              localStorage.setItem('bestScore', gameScore.toString());
-            }
           }}
         >
           Score and pass
@@ -177,7 +166,6 @@ export const Game = () => {
         roundScore={isBust ? 0 : roundScore}
         selectedScore={selectedScore}
         totalTurns={totalTurns}
-        bestScore={bestScore}
       />
 
       <div className="debugging-buttons">
