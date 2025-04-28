@@ -179,6 +179,10 @@ export const scoreDice = (dice: number[]) => {
     score += 600;
   }
 
+  /**
+    Score 1s and 5s, the only numbers
+    you can score as one- or two-of-a-kind
+  */ 
   dice.map((die: number) => {
     if (die === 1 && findDuplicates(dice, 1) < 3) score += 100;
     if (die === 5 && findDuplicates(dice, 5) < 3) score += 50;
