@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
 import { initialDice, WINNING_SCORE } from '../constants';
 import { rollDie } from '../utils.ts';
+import {
+  flattenDiceToNumbers,
+  isDieInScoringCombo,
+  removeDice,
+} from './gameUtils.ts';
 import { scoreDice } from '../Scoring/Scoring.ts';
 import type { Die as D } from '../Die/Die.ts';
+
 import { Die } from '../Die/Die.tsx';
-import { Footer } from '../Footer';
+import { Footer } from '../Footer/Footer';
 import { Scorecard } from '../Scorecard/Scorecard';
-import { Bust } from '../Bust.tsx';
+import { Bust } from '../Bust';
+import { Win } from '../Win/Win.tsx';
 
 export const Game = () => {
   const [roundScore, setRoundScore] = useState(0);
@@ -24,27 +31,6 @@ export const Game = () => {
     } else {
       setSelectedDice(selectedDice.filter((d) => d.id !== die.id));
     }
-  };
-
-  const flattenDiceToNumbers = (dice: Array<D>): number[] => {
-    const nums: number[] = [];
-
-    dice.map((d) => {
-      nums.push(d.number);
-    });
-
-    return nums;
-  };
-
-  const removeDice = (dice: D[], diceToRemove: D[]): D[] => {
-    return dice.filter((die) => !diceToRemove.find((d) => die.id === d.id));
-  };
-
-  const isDieInScoringCombo = (dice: D[], die: D): boolean => {
-    return (
-      scoreDice(flattenDiceToNumbers(dice.filter((d) => d.id !== die.id))) <
-      scoreDice(flattenDiceToNumbers(dice))
-    );
   };
 
   const selectedScore: number = scoreDice(flattenDiceToNumbers(selectedDice));
@@ -89,20 +75,11 @@ export const Game = () => {
       {isBust && <Bust />}
 
       {isGameWon && (
-        <div>
-          <p>Congrats, you won!</p>
-          <div>
-            <button
-              onClick={() => {
-                setRoundScore(0);
-                setGameScore(0);
-                createNewFullDiceSet();
-              }}
-            >
-              Start new game
-            </button>
-          </div>
-        </div>
+        <Win
+          setRoundScore={setRoundScore}
+          setGameScore={setGameScore}
+          createNewDice={createNewFullDiceSet}
+        />
       )}
 
       <div className="buttons-wrapper">

@@ -1,0 +1,40 @@
+ol {
+  text-align: left;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  padding-left: 0;
+}
+
+ol li {
+  list-style: none;
+  counter-reset: custom-counter;
+}
+
+ol li {
+  counter-increment: custom-counter;
+}
+
+ol li::before {
+  content: counter(custom-counter) '. ';
+  font-family: 'Metamorphous', serif;
+  font-size: 18px;
+}
+
+table {
+  margin-top: var(--medium);
+  margin-bottom: var(--large);
+  border-collapse: collapse;
+  max-width: 800px;
+}
+
+th {
+  font-size: 24px;
+  font-family: 'Metamorphous', serif;
+}
+
+tr {
+  outline: solid 1px var(--gray);
+}
+
+td {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}

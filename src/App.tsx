@@ -8,7 +8,9 @@ const App = () => {
       <Link to="/game">
         <button>Begin game</button>
       </Link>
-      <button>How to Play</button>
+      <Link to="instructions">
+        <button>How to Play</button>
+      </Link>
     </>
   );
 };

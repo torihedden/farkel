@@ -1,0 +1,102 @@
+import { Link } from 'react-router';
+import './Instructions.css';
+import { WINNING_SCORE } from '../constants';
+
+export const Instructions = () => {
+  //
+
+  return (
+    <>
+      <h1>Farkel</h1>
+      <h2>How to Play</h2>
+      <ol>
+        <li>All 6 dice are rolled to start.</li>
+        <li>
+          Select at least one die to score, according to the below scoring
+          table.
+        </li>
+        <li>
+          Scored dice are removed from play. To re-roll dice for the chance to
+          score more points, click "Roll again".
+        </li>
+        <li>
+          If you bust on any roll (no viable scoring combinations), you lose all
+          points for that round, and must pass your turn.
+        </li>
+        <li>
+          If you want to end your scoring round and keep your points, click
+          "Score and pass".
+        </li>
+        <li>First player to {WINNING_SCORE} wins. Good fate be with you!</li>
+      </ol>
+
+      <table>
+        <tbody>
+          <tr>
+            <th>Combinations</th>
+            <th>Points</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>100</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>1, 2, 3, 4, 5</td>
+            <td>500</td>
+          </tr>
+          <tr>
+            <td>2, 3, 4, 5, 6</td>
+            <td>750</td>
+          </tr>
+          <tr>
+            <td>1, 2, 3, 4, 5, 6</td>
+            <td>1,500</td>
+          </tr>
+          <tr>
+            <td>1, 1, 1</td>
+            <td>1,000</td>
+          </tr>
+          <tr>
+            <td>2, 2, 2</td>
+            <td>200</td>
+          </tr>
+          <tr>
+            <td>3, 3, 3</td>
+            <td>300</td>
+          </tr>
+          <tr>
+            <td>4, 4, 4</td>
+            <td>400</td>
+          </tr>
+          <tr>
+            <td>5, 5, 5</td>
+            <td>500</td>
+          </tr>
+          <tr>
+            <td>6, 6, 6</td>
+            <td>600</td>
+          </tr>
+          <tr>
+            <td>Four or more of a kind</td>
+            <td>
+              <ul>
+                <li>2x points of three of a kind</li>
+                <li>four 4s = 800 points (400 times 2)</li>
+                <li>five 4s = 1,600 points (800 times 2)</li>
+                <li>etc.</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <Link to="/">
+        <button>Back</button>
+      </Link>
+    </>
+  );
+};
