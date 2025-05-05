@@ -14,11 +14,16 @@ import { Footer } from '../Footer/Footer';
 import { Scorecard } from '../Scorecard/Scorecard';
 import { Bust } from '../Bust';
 import { Win } from '../Win/Win.tsx';
+import { Debug } from '../Debugging/Debugging.tsx';
+import { Controls } from '../Controls/Controls.tsx';
+
+import './Game.css';
 
 export const Game = () => {
   const [roundScore, setRoundScore] = useState(0);
   const [gameScore, setGameScore] = useState(0);
   const [totalTurns, setTotalTurns] = useState(0);
+  const [currentPlayer, setCurrentPlayer] = useState(0);
 
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
@@ -31,6 +36,10 @@ export const Game = () => {
     } else {
       setSelectedDice(selectedDice.filter((d) => d.id !== die.id));
     }
+  };
+
+  const changePlayer = (player: number) => {
+    return player === 0 ? 1 : 0;
   };
 
   const selectedScore: number = scoreDice(flattenDiceToNumbers(selectedDice));
@@ -56,6 +65,8 @@ export const Game = () => {
 
   return (
     <>
+      <div>Player {currentPlayer + 1}</div>
+
       {!isGameWon && (
         <div className="dice-wrapper">
           {rollableDice.map((d) => (
@@ -76,67 +87,48 @@ export const Game = () => {
 
       {isGameWon && (
         <Win
-          setRoundScore={setRoundScore}
-          setGameScore={setGameScore}
-          createNewDice={createNewFullDiceSet}
+          resetGame={() => {
+            setRoundScore(0);
+            setGameScore(0);
+            createNewFullDiceSet();
+            setCurrentPlayer(0);
+          }}
         />
       )}
 
-      <div className="buttons-wrapper">
-        <button
-          disabled={
-            noValidScoringCombo ||
-            !hasValidScoringCombo ||
-            !areSelectedDiceValid
-          }
-          onClick={() => {
-            setRoundScore(roundScore + selectedScore);
+      <Controls
+        noValidScoringCombo={noValidScoringCombo}
+        hasValidScoringCombo={hasValidScoringCombo}
+        areSelectedDiceValid={areSelectedDiceValid}
+        rollableDice={rollableDice}
+        createNewFullDiceSet={() => createNewFullDiceSet()}
+        rollAgain={() => {
+          setRoundScore(roundScore + selectedScore);
+          setRollableDice((d) => removeDice(d, selectedDice));
+          setRollableDice((d) =>
+            d.map((die) => ({ id: die.id, number: rollDie() })),
+          );
+          setSelectedDice([]);
+        }}
+        scoreAndPass={() => {
+          setTotalTurns(totalTurns + 1);
+          setGameScore(gameScore + roundScore + selectedScore);
 
-            setRollableDice((d) => removeDice(d, selectedDice));
+          setSelectedDice([]);
+          setRoundScore(0);
 
-            setRollableDice((d) =>
-              d.map((die) => ({ id: die.id, number: rollDie() })),
-            );
-
-            setSelectedDice([]);
-          }}
-        >
-          Roll again
-        </button>
-
-        {rollableDice.length === 0 && <>{createNewFullDiceSet()}</>}
-
-        <button
-          disabled={
-            noValidScoringCombo ||
-            !hasValidScoringCombo ||
-            !areSelectedDiceValid
-          }
-          onClick={() => {
-            setTotalTurns(totalTurns + 1);
-            setGameScore(gameScore + roundScore + selectedScore);
-
-            setSelectedDice([]);
-            setRoundScore(0);
-
-            createNewFullDiceSet();
-          }}
-        >
-          Score and pass
-        </button>
-
-        <button
-          disabled={!isBust}
-          onClick={() => {
-            setTotalTurns(totalTurns + 1);
-            setRoundScore(0);
-            setSelectedDice([]);
-            createNewFullDiceSet();
-          }}
-        >
-          Pass turn
-        </button>
-      </div>
+          createNewFullDiceSet();
+          setCurrentPlayer(changePlayer(currentPlayer));
+        }}
+        isBust={isBust}
+        passTurn={() => {
+          setTotalTurns(totalTurns + 1);
+          setRoundScore(0);
+          setSelectedDice([]);
+          createNewFullDiceSet();
+          setCurrentPlayer(changePlayer(currentPlayer));
+        }}
+      />
 
       <Scorecard
         gameScore={gameScore}
@@ -145,20 +137,13 @@ export const Game = () => {
         totalTurns={totalTurns}
       />
 
-      <div className="debugging-buttons">
-        <br />
-        <button onClick={() => createNewFullDiceSet()}>Reset dice</button>
-        <button
-          onClick={() => {
-            setSelectedDice([]);
-            setRoundScore(0);
-            setGameScore(0);
-            setTotalTurns(0);
-          }}
-        >
-          Reset all scores
-        </button>
-      </div>
+      <Debug
+        setSelectedDice={setSelectedDice}
+        setRoundScore={setRoundScore}
+        setGameScore={setGameScore}
+        createNewDice={createNewFullDiceSet}
+        setTotalTurns={setTotalTurns}
+      />
 
       <Footer />
     </>
