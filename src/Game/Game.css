@@ -20,3 +20,7 @@
 .buttons-wrapper button:nth-of-type(3) {
   margin-right: 0;
 }
+
+button:disabled {
+  filter: brightness(0.7);
+}

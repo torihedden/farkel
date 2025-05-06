@@ -2,23 +2,24 @@ import { WINNING_SCORE } from '../constants';
 import './Scorecard.css';
 
 export const Scorecard = (props: {
-  gameScore: number;
+  gameScore: number[];
   roundScore: number;
   selectedScore: number;
-  totalTurns: number;
 }) => {
-  const { gameScore, roundScore, selectedScore, totalTurns } = props;
+  const { gameScore, roundScore, selectedScore } = props;
 
   return (
     <div className="scorecard">
       <div>Selected score- {selectedScore}</div>
       <div>Round total- {roundScore}</div>
       <br />
-      <div>
-        Game score- {gameScore} / {WINNING_SCORE}
-      </div>
-      <br />
-      <div>Turn number - {totalTurns}</div>
+      <>
+        {gameScore.map((s, i) => (
+          <div key={i}>
+            Player {i + 1}: {s} / {WINNING_SCORE}
+          </div>
+        ))}
+      </>
     </div>
   );
 };

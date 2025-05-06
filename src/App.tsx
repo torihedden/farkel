@@ -5,7 +5,7 @@ const App = () => {
   return (
     <>
       <h1>Farkel</h1>
-      <Link to="/game">
+      <Link to="/play">
         <button>Begin game</button>
       </Link>
       <Link to="instructions">

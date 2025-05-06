@@ -19,16 +19,21 @@ import { Controls } from '../Controls/Controls.tsx';
 
 import './Game.css';
 
-export const Game = () => {
+export const Game = (props: {
+  currentPlayer: number;
+  setCurrentPlayer: (arg: number) => void;
+  multiGameScore: number[];
+  setMultiGameScore: (arg: number[]) => void;
+}) => {
+  const { currentPlayer, setCurrentPlayer, multiGameScore, setMultiGameScore } =
+    props;
   const [roundScore, setRoundScore] = useState(0);
-  const [gameScore, setGameScore] = useState(0);
-  const [totalTurns, setTotalTurns] = useState(0);
-  const [currentPlayer, setCurrentPlayer] = useState(0);
 
+  const [totalTurns, setTotalTurns] = useState(0);
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
 
-  const isGameWon = gameScore >= WINNING_SCORE;
+  const isGameWon = multiGameScore[currentPlayer] >= WINNING_SCORE;
 
   const toggleSelectDie = (die: D) => {
     if (!selectedDice.includes(die)) {
@@ -40,6 +45,20 @@ export const Game = () => {
 
   const changePlayer = (player: number) => {
     return player === 0 ? 1 : 0;
+  };
+
+  const updateGameScore = (
+    player: number,
+    score: number,
+    prevScore: number,
+  ) => {
+    const updatedScores = multiGameScore.map((s, i) => {
+      if (player === i) {
+        return prevScore + score;
+      } else return s;
+    });
+
+    return updatedScores;
   };
 
   const selectedScore: number = scoreDice(flattenDiceToNumbers(selectedDice));
@@ -65,7 +84,7 @@ export const Game = () => {
 
   return (
     <>
-      <div>Player {currentPlayer + 1}</div>
+      <h2>Player {currentPlayer + 1}</h2>
 
       {!isGameWon && (
         <div className="dice-wrapper">
@@ -89,7 +108,7 @@ export const Game = () => {
         <Win
           resetGame={() => {
             setRoundScore(0);
-            setGameScore(0);
+            setMultiGameScore([0, 0]);
             createNewFullDiceSet();
             setCurrentPlayer(0);
           }}
@@ -112,7 +131,14 @@ export const Game = () => {
         }}
         scoreAndPass={() => {
           setTotalTurns(totalTurns + 1);
-          setGameScore(gameScore + roundScore + selectedScore);
+
+          setMultiGameScore(
+            updateGameScore(
+              currentPlayer,
+              roundScore + selectedScore,
+              multiGameScore[currentPlayer],
+            ),
+          );
 
           setSelectedDice([]);
           setRoundScore(0);
@@ -131,18 +157,18 @@ export const Game = () => {
       />
 
       <Scorecard
-        gameScore={gameScore}
+        gameScore={multiGameScore}
         roundScore={isBust ? 0 : roundScore}
         selectedScore={selectedScore}
-        totalTurns={totalTurns}
       />
 
       <Debug
         setSelectedDice={setSelectedDice}
         setRoundScore={setRoundScore}
-        setGameScore={setGameScore}
+        setGameScore={setMultiGameScore}
         createNewDice={createNewFullDiceSet}
         setTotalTurns={setTotalTurns}
+        diceValues={flattenDiceToNumbers(rollableDice)}
       />
 
       <Footer />

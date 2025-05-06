@@ -10,8 +10,11 @@
 
   --black: #000000;
   --background: #dbd3be;
+  --light: #f2e9d3;
   --dark: #392b15;
   --gray: gray;
+  /* --button: #ff8383; */
+  --button: #c9d98e;
   --link: #284d80;
 
   --x-small: 8px;
@@ -38,8 +41,9 @@ button {
   border-radius: var(--x-small);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 16px;
+  font-size: var(--small);
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
+  background-color: var(--button);
 }

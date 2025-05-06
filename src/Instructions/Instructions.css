@@ -2,9 +2,6 @@ ol {
   text-align: left;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   padding-left: 0;
-}
-
-ol li {
   list-style: none;
   counter-reset: custom-counter;
 }
@@ -23,18 +20,22 @@ table {
   margin-top: var(--medium);
   margin-bottom: var(--large);
   border-collapse: collapse;
-  max-width: 800px;
+  text-align: center;
+}
+
+table,
+th,
+td {
+  border: solid 1px var(--gray);
 }
 
 th {
   font-size: 24px;
   font-family: 'Metamorphous', serif;
-}
-
-tr {
-  outline: solid 1px var(--gray);
+  padding: var(--x-small) var(--small);
 }
 
 td {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  padding: 2px;
 }

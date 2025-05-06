@@ -6,3 +6,7 @@
 .debugging-buttons button:nth-of-type(1) {
   margin-right: var(--small);
 }
+
+.debugging-buttons button {
+  background-color: var(--gray);
+}

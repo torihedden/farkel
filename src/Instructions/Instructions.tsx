@@ -11,13 +11,10 @@ export const Instructions = () => {
       <h2>How to Play</h2>
       <ol>
         <li>All 6 dice are rolled to start.</li>
+        <li>Select at least one die to score, (see scoring table).</li>
         <li>
-          Select at least one die to score, according to the below scoring
-          table.
-        </li>
-        <li>
-          Scored dice are removed from play. To re-roll dice for the chance to
-          score more points, click "Roll again".
+          Scored dice are removed from play. To re-roll remaining dice for the
+          chance to score more points on your turn, click "Roll again".
         </li>
         <li>
           If you bust on any roll (no viable scoring combinations), you lose all
@@ -81,15 +78,16 @@ export const Instructions = () => {
             <td>600</td>
           </tr>
           <tr>
-            <td>Four or more of a kind</td>
-            <td>
-              <ul>
-                <li>2x points of three of a kind</li>
-                <li>four 4s = 800 points (400 times 2)</li>
-                <li>five 4s = 1,600 points (800 times 2)</li>
-                <li>etc.</li>
-              </ul>
-            </td>
+            <td>Four of a kind</td>
+            <td>2x the points of three of a kind</td>
+          </tr>
+          <tr>
+            <td>Five of a kind</td>
+            <td>4x the points of three of a kind</td>
+          </tr>
+          <tr>
+            <td>Six of a kind</td>
+            <td>8x the points of three of a kind</td>
           </tr>
         </tbody>
       </table>
