@@ -12,7 +12,7 @@ import type { Die as D } from '../Die/Die.ts';
 import { Die } from '../Die/Die.tsx';
 import { Footer } from '../Footer/Footer';
 import { Scorecard } from '../Scorecard/Scorecard';
-import { Bust } from '../Bust';
+import { Bust } from '../Bust/Bust.tsx';
 import { Win } from '../Win/Win.tsx';
 import { Debug } from '../Debugging/Debugging.tsx';
 import { Controls } from '../Controls/Controls.tsx';
@@ -33,7 +33,12 @@ export const Game = (props: {
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
 
-  const isGameWon = multiGameScore[currentPlayer] >= WINNING_SCORE;
+  // const isGameWon = multiGameScore[currentPlayer] >= WINNING_SCORE;
+
+  const isGameWon =
+    multiGameScore[
+      multiGameScore.findIndex((score) => score >= WINNING_SCORE)
+    ] >= WINNING_SCORE;
 
   const toggleSelectDie = (die: D) => {
     if (!selectedDice.includes(die)) {
@@ -84,7 +89,12 @@ export const Game = (props: {
 
   return (
     <>
-      <h2>Player {currentPlayer + 1}</h2>
+      <h2>
+        Player{' '}
+        {isGameWon
+          ? multiGameScore.findIndex((score) => score >= WINNING_SCORE) + 1
+          : currentPlayer + 1}
+      </h2>
 
       {!isGameWon && (
         <div className="dice-wrapper">
@@ -102,7 +112,7 @@ export const Game = (props: {
         </div>
       )}
 
-      {isBust && <Bust />}
+      {isBust ? <Bust /> : <div className="placeholder">.</div>}
 
       {isGameWon && (
         <Win
@@ -115,53 +125,53 @@ export const Game = (props: {
         />
       )}
 
-      <Controls
-        noValidScoringCombo={noValidScoringCombo}
-        hasValidScoringCombo={hasValidScoringCombo}
-        areSelectedDiceValid={areSelectedDiceValid}
-        rollableDice={rollableDice}
-        createNewFullDiceSet={() => createNewFullDiceSet()}
-        rollAgain={() => {
-          setRoundScore(roundScore + selectedScore);
-          setRollableDice((d) => removeDice(d, selectedDice));
-          setRollableDice((d) =>
-            d.map((die) => ({ id: die.id, number: rollDie() })),
-          );
-          setSelectedDice([]);
-        }}
-        scoreAndPass={() => {
-          setTotalTurns(totalTurns + 1);
+      {!isGameWon && (
+        <Controls
+          noValidScoringCombo={noValidScoringCombo}
+          hasValidScoringCombo={hasValidScoringCombo}
+          areSelectedDiceValid={areSelectedDiceValid}
+          rollableDice={rollableDice}
+          createNewFullDiceSet={() => createNewFullDiceSet()}
+          rollAgain={() => {
+            setRoundScore(roundScore + selectedScore);
+            setRollableDice((d) => removeDice(d, selectedDice));
+            setRollableDice((d) =>
+              d.map((die) => ({ id: die.id, number: rollDie() })),
+            );
+            setSelectedDice([]);
+          }}
+          scoreAndPass={() => {
+            setTotalTurns(totalTurns + 1);
+            setMultiGameScore(
+              updateGameScore(
+                currentPlayer,
+                roundScore + selectedScore,
+                multiGameScore[currentPlayer],
+              ),
+            );
 
-          setMultiGameScore(
-            updateGameScore(
-              currentPlayer,
-              roundScore + selectedScore,
-              multiGameScore[currentPlayer],
-            ),
-          );
+            setSelectedDice([]);
+            setRoundScore(0);
 
-          setSelectedDice([]);
-          setRoundScore(0);
-
-          createNewFullDiceSet();
-          setCurrentPlayer(changePlayer(currentPlayer));
-        }}
-        isBust={isBust}
-        passTurn={() => {
-          setTotalTurns(totalTurns + 1);
-          setRoundScore(0);
-          setSelectedDice([]);
-          createNewFullDiceSet();
-          setCurrentPlayer(changePlayer(currentPlayer));
-        }}
-      />
+            createNewFullDiceSet();
+            setCurrentPlayer(changePlayer(currentPlayer));
+          }}
+          isBust={isBust}
+          passTurn={() => {
+            setTotalTurns(totalTurns + 1);
+            setRoundScore(0);
+            setSelectedDice([]);
+            createNewFullDiceSet();
+            setCurrentPlayer(changePlayer(currentPlayer));
+          }}
+        />
+      )}
 
       <Scorecard
         gameScore={multiGameScore}
         roundScore={isBust ? 0 : roundScore}
         selectedScore={selectedScore}
       />
-
       <Debug
         setSelectedDice={setSelectedDice}
         setRoundScore={setRoundScore}
@@ -170,7 +180,6 @@ export const Game = (props: {
         setTotalTurns={setTotalTurns}
         diceValues={flattenDiceToNumbers(rollableDice)}
       />
-
       <Footer />
     </>
   );

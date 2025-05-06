@@ -22,5 +22,9 @@
 }
 
 button:disabled {
-  filter: brightness(0.7);
+  background-color: var(--button-disabled);
+}
+
+.placeholder {
+  color: white;
 }

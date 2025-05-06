@@ -10,8 +10,9 @@ export const Instructions = () => {
       <h1>Farkel</h1>
       <h2>How to Play</h2>
       <ol>
-        <li>All 6 dice are rolled to start.</li>
-        <li>Select at least one die to score, (see scoring table).</li>
+        <li>
+          Select at least one die to score from each roll (see scoring table).
+        </li>
         <li>
           Scored dice are removed from play. To re-roll remaining dice for the
           chance to score more points on your turn, click "Roll again".
@@ -30,7 +31,7 @@ export const Instructions = () => {
       <table>
         <tbody>
           <tr>
-            <th>Combinations</th>
+            <th>Combination</th>
             <th>Points</th>
           </tr>
           <tr>
