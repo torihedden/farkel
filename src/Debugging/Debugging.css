@@ -1,3 +1,7 @@
+label {
+  font-family: monospace;
+}
+
 .debugging-buttons {
   margin-top: var(--medium);
   font-family: monospace;

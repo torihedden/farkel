@@ -1,9 +1,13 @@
-import './App.css';
+import { useState } from 'react';
 import { Link } from 'react-router';
-import { Footer } from './Footer/Footer';
+import './App.css';
 import border from './assets/border.png';
+import { Instructions } from './Instructions/Instructions';
+import { Footer } from './Footer/Footer';
 
 const App = () => {
+  const [showInstructions, setShowInstructions] = useState(false);
+
   return (
     <>
       <img className="border" src={border} />
@@ -12,9 +16,10 @@ const App = () => {
         <Link to="/play">
           <button>Begin game</button>
         </Link>
-        <Link to="instructions">
-          <button>How to Play</button>
-        </Link>
+        <button onClick={() => setShowInstructions(true)}>How to Play</button>
+        {showInstructions && (
+          <Instructions closeModal={() => setShowInstructions(false)} />
+        )}
       </div>
       <Footer />
     </>

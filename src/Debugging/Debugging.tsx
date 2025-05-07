@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './Debugging.css';
 
 export const Debug = (props: {
@@ -6,7 +7,6 @@ export const Debug = (props: {
   setGameScore: (arg: number[]) => void;
   createNewDice: () => void;
   setTotalTurns: (arg: number) => void;
-  diceValues: number[];
 }) => {
   const {
     setSelectedDice,
@@ -14,30 +14,37 @@ export const Debug = (props: {
     setGameScore,
     createNewDice,
     setTotalTurns,
-    // diceValues,
   } = props;
 
-  return (
-    <div className="debugging-buttons">
-      <br />
-      <button onClick={() => createNewDice()}>Re-roll dice</button>
-      <button
-        onClick={() => {
-          setSelectedDice([]);
-          setRoundScore(0);
-          setGameScore([0, 0]);
-          setTotalTurns(0);
-        }}
-      >
-        Reset all scores
-      </button>
-      <br />
-      <br />
+  const [showDebug, setShowDebug] = useState(false);
 
-      {/* <label>
-        Dice vals
-        <input name="dice-values" value={diceValues.toString()} />
-      </label> */}
+  return (
+    <div>
+      <label>
+        Show debugging
+        <input
+          type="checkbox"
+          checked={showDebug}
+          onChange={() => setShowDebug(!showDebug)}
+        />
+      </label>
+      {showDebug && (
+        <div className="debugging-buttons">
+          <button onClick={() => createNewDice()}>Re-roll dice</button>
+          <button
+            onClick={() => {
+              setSelectedDice([]);
+              setRoundScore(0);
+              setGameScore([0, 0]);
+              setTotalTurns(0);
+            }}
+          >
+            Reset all scores
+          </button>
+        </div>
+      )}
+      <br />
+      <br />
     </div>
   );
 };

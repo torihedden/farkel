@@ -1,7 +1,3 @@
-.buttons-wrapper {
-  margin-top: var(--large);
-}
-
 .dice-wrapper {
   display: flex;
   justify-content: center;
@@ -11,14 +7,6 @@
 
 :disabled {
   cursor: not-allowed;
-}
-
-.buttons-wrapper button {
-  margin-right: var(--small);
-}
-
-.buttons-wrapper button:nth-of-type(3) {
-  margin-right: 0;
 }
 
 button:disabled {

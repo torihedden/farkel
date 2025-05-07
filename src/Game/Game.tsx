@@ -18,6 +18,7 @@ import { Debug } from '../Debugging/Debugging.tsx';
 import { Controls } from '../Controls/Controls.tsx';
 
 import './Game.css';
+import { Instructions } from '../Instructions/Instructions.tsx';
 
 export const Game = (props: {
   currentPlayer: number;
@@ -32,6 +33,8 @@ export const Game = (props: {
   const [totalTurns, setTotalTurns] = useState(0);
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
+
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const isGameWon =
     multiGameScore[
@@ -170,18 +173,22 @@ export const Game = (props: {
         roundScore={isBust ? 0 : roundScore}
         selectedScore={selectedScore}
       />
-      <Debug
-        setSelectedDice={setSelectedDice}
-        setRoundScore={setRoundScore}
-        setGameScore={setMultiGameScore}
-        createNewDice={createNewFullDiceSet}
-        setTotalTurns={setTotalTurns}
-        diceValues={flattenDiceToNumbers(rollableDice)}
-      />
 
-      {/* {import.meta.env.VITE_TITLE} */}
+      {showInstructions && (
+        <Instructions closeModal={() => setShowInstructions(false)} />
+      )}
 
-      <a href="/instructions">Instructions</a>
+      {import.meta.env.VITE_TITLE === 'DEV' && (
+        <Debug
+          setSelectedDice={setSelectedDice}
+          setRoundScore={setRoundScore}
+          setGameScore={setMultiGameScore}
+          createNewDice={createNewFullDiceSet}
+          setTotalTurns={setTotalTurns}
+        />
+      )}
+
+      <button onClick={() => setShowInstructions(true)}>Instructions</button>
       <Footer />
     </>
   );

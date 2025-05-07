@@ -1,4 +1,5 @@
 import type { Die as D } from '../Die/Die.ts';
+import './Controls.css';
 
 export const Controls = (props: {
   noValidScoringCombo: boolean;
