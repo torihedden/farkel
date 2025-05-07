@@ -13,8 +13,8 @@ const App = () => {
       <img className="border" src={border} />
       <div className="content">
         <h1>Farkel</h1>
-        <Link to="/play">
-          <button>Begin game</button>
+        <Link to="/play" className="button-link">
+          Begin game
         </Link>
         <button onClick={() => setShowInstructions(true)}>How to Play</button>
         {showInstructions && (
