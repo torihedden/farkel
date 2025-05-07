@@ -6,5 +6,5 @@ export default defineConfig({
     host: true
   },
   plugins: [react()],
-  base: 'https://torihedden.com/farkel/'
+  // base: 'https://torihedden.com/farkel/'
 })
