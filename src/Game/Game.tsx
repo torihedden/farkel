@@ -33,8 +33,6 @@ export const Game = (props: {
   const [rollableDice, setRollableDice] = useState(initialDice);
   const [selectedDice, setSelectedDice] = useState<D[]>([]);
 
-  // const isGameWon = multiGameScore[currentPlayer] >= WINNING_SCORE;
-
   const isGameWon =
     multiGameScore[
       multiGameScore.findIndex((score) => score >= WINNING_SCORE)
@@ -180,6 +178,10 @@ export const Game = (props: {
         setTotalTurns={setTotalTurns}
         diceValues={flattenDiceToNumbers(rollableDice)}
       />
+
+      {/* {import.meta.env.VITE_TITLE} */}
+
+      <a href="/instructions">Instructions</a>
       <Footer />
     </>
   );
