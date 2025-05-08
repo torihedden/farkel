@@ -179,7 +179,7 @@ export const Game = (props: {
         <Instructions closeModal={() => setShowInstructions(false)} />
       )}
 
-      {import.meta.env.VITE_TITLE === 'DEV' && (
+      {import.meta.env.VITE_ENV === 'DEV' && (
         <Debug
           setSelectedDice={setSelectedDice}
           setRoundScore={setRoundScore}
