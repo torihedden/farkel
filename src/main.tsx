@@ -7,7 +7,7 @@ import { Play } from './Play/Play.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/farkel">
       <Routes>
         <Route path="/" index element={<App />} />
         <Route path="/play" element={<Play />} />
