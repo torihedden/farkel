@@ -21,19 +21,27 @@ export const Die = (props: {
   onClick: () => void;
   isSelected: boolean;
   isDisabled: boolean;
+  isValidDie: boolean;
 }) => {
-  const { die, onClick, isSelected, isDisabled } = props;
+  const { die, onClick, isSelected, isDisabled, isValidDie } = props;
 
   const dieClasses =
-    `die ${isSelected ? 'selected' : ''}` +
-    `${isDisabled ? 'not-selectable' : ''}`;
+    `die ` +
+    `${isSelected && !isValidDie ? 'invalid' : ''}` +
+    ` ${isSelected ? 'selected' : ''}` +
+    ` ${isDisabled ? 'not-selectable' : ''}`;
 
   return (
     <div>
       <div className={dieClasses} onClick={onClick}>
         <img src={DICE_PIPS[die.number]} />
       </div>
-      <div>{die.id}</div>
+      <div>
+        {die.id}
+        {/* {isValidDie.toString()}
+        <br />
+        {isSelected.toString()} */}
+      </div>
     </div>
   );
 };

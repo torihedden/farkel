@@ -108,6 +108,7 @@ export const Game = (props: {
               isSelected={selectedDice.includes(d)}
               isDisabled={isGameWon || isBust}
               key={`${d.id}-${rollableDice.length}-${totalTurns}`}
+              isValidDie={isDieInScoringCombo(selectedDice, d)}
             />
           ))}
         </div>

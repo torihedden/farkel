@@ -18,6 +18,10 @@
   background: var(--gray);
 }
 
+.invalid {
+  outline: solid 4px var(--error);
+}
+
 .die:hover {
   filter: brightness(50%);
 }
