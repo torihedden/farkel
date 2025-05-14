@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { HashRouter, Routes, Route } from 'react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
@@ -7,13 +7,11 @@ import { Play } from './Play/Play.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter
-      basename={import.meta.env.VITE_ENV === 'DEV' ? '' : '/farkel'}
-    >
+    <HashRouter basename={import.meta.env.VITE_ENV === 'DEV' ? '' : '/farkel'}>
       <Routes>
         <Route path="/" index element={<App />} />
         <Route path="/play" element={<Play />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 );
