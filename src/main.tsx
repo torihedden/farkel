@@ -7,7 +7,7 @@ import { Play } from './Play/Play.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <HashRouter basename={import.meta.env.VITE_ENV === 'DEV' ? '' : '/farkel'}>
+    <HashRouter>
       <Routes>
         <Route path="/" index element={<App />} />
         <Route path="/play" element={<Play />} />
