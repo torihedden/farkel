@@ -42,7 +42,9 @@ export const Controls = (props: {
           noValidScoringCombo || !hasValidScoringCombo || !areSelectedDiceValid
         }
         onClick={() => {
-          scoreAndPass();
+          setTimeout(() => {
+            scoreAndPass();
+          }, 500);
         }}
       >
         Score and pass
