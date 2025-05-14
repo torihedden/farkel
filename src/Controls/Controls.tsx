@@ -50,7 +50,14 @@ export const Controls = (props: {
         Score and pass
       </button>
 
-      <button disabled={!isBust} onClick={() => passTurn()}>
+      <button
+        disabled={!isBust}
+        onClick={() => {
+          setTimeout(() => {
+            passTurn();
+          }, 500);
+        }}
+      >
         Pass turn
       </button>
     </div>
